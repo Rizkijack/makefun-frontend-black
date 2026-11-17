@@ -2,7 +2,7 @@
 import { compact, esc, timeLeft, usd } from './format.js';
 import { API, REQUEST_STATS, TTL, cachedGet, revalidate, route } from './main.js';
 
-export const TABS = ['overview', 'rewards', 'standings', 'feed', 'history'];
+export const TABS = ['overview', 'rewards', 'standings', 'entries', 'feed', 'history'];
 
 const dateUTC = (iso) => {
   if (!iso) return '—';
@@ -135,10 +135,12 @@ export async function renderBounty(root, slug, active = 'overview') {
       <div class="detail-sub">${esc(b.slug)} · ${esc(b.sponsor?.name || 'make.fun')} · ${fee}</div>
       <div class="pot-band"><span><span class="label">LIVE POT</span><span class="pp">${usd(b.potUsd ?? b.rewardAmount)}</span></span><span class="pl">${esc(datesLine(b))}</span></div>
     </header>
+    <div id="livehost"></div>
     ${tabs(active)}
     <section class="tabpane ${active === 'overview' ? 'on' : ''}" id="pane-overview" role="tabpanel" aria-labelledby="tab-overview" ${active === 'overview' ? '' : 'hidden'}>${active === 'overview' ? overview(b) : ''}</section>
     <section class="tabpane ${active === 'rewards' ? 'on' : ''}" id="pane-rewards" role="tabpanel" aria-labelledby="tab-rewards" ${active === 'rewards' ? '' : 'hidden'}>${active === 'rewards' ? rewardsPane(b) : ''}</section>
     <section class="tabpane ${active === 'standings' ? 'on' : ''}" id="pane-standings" role="tabpanel" aria-labelledby="tab-standings" ${active === 'standings' ? '' : 'hidden'}></section>
+    <section class="tabpane ${active === 'entries' ? 'on' : ''}" id="pane-entries" role="tabpanel" aria-labelledby="tab-entries" ${active === 'entries' ? '' : 'hidden'}></section>
     <section class="tabpane ${active === 'feed' ? 'on' : ''}" id="pane-feed" role="tabpanel" aria-labelledby="tab-feed" ${active === 'feed' ? '' : 'hidden'}></section>
     <section class="tabpane ${active === 'history' ? 'on' : ''}" id="pane-history" role="tabpanel" aria-labelledby="tab-history" ${active === 'history' ? '' : 'hidden'}></section>`;
 
@@ -175,11 +177,20 @@ export async function renderBounty(root, slug, active = 'overview') {
     const [{ renderLeaderboard }, { renderHistory }] = await Promise.all([import('./leaderboard.js'), import('./history.js')]);
     pane.insertAdjacentHTML('beforeend', '<div class="blk mt" id="mini-history"></div>');
     await Promise.all([renderLeaderboard(pane, slug), renderHistory(pane.querySelector('#mini-history'), slug, true)]);
+  } else if (active === 'entries') {
+    const { renderRecent } = await import('./entry.js');
+    await renderRecent(root.querySelector('#pane-entries'), slug);
   } else if (active === 'feed') {
+    const { renderRecent } = await import('./entry.js');
     const { renderFeed } = await import('./feed.js');
-    await renderFeed(root.querySelector('#pane-feed'), slug);
+    const pane = root.querySelector('#pane-feed');
+    pane.insertAdjacentHTML('beforeend', '<div id="recent-host"></div><div id="disc-host"></div>');
+    await Promise.all([renderRecent(pane.querySelector('#recent-host'), slug), renderFeed(pane.querySelector('#disc-host'), slug)]);
   } else if (active === 'history') {
     const { renderHistory } = await import('./history.js');
     await renderHistory(root.querySelector('#pane-history'), slug, false);
   }
+
+  const { renderLive } = await import('./entry.js');
+  await renderLive(root.querySelector('#livehost'), slug);
 }

@@ -60,9 +60,11 @@ export async function renderProfile(root, handle) {
   }
 
   const face = p.avatar?.url || p.image;
-  const avatar = face && String(face).startsWith('/')
-    ? `<img class="avatar" crossorigin="anonymous" src="https://make.fun${esc(face)}" alt="" width="40" height="40">`
-    : `<div class="mono-badge" aria-hidden="true">${esc(String(p.handle).slice(0, 2).toUpperCase())}</div>`;
+  const pic = `${API}/profiles/${encodeURIComponent(handle)}/picture.png`;
+  const initials = esc(String(p.handle).slice(0, 2).toUpperCase());
+  const fallback = face && String(face).startsWith('/') ? `https://make.fun${esc(face)}` : '';
+  // crossorigin must be set before src so the PNG request stays CORS-clean.
+  const avatar = `<img class="avatar" crossorigin="anonymous" src="${esc(pic)}"${fallback ? ` data-face="${fallback}"` : ''} data-initials="${initials}" alt="" width="40" height="40">`;
   const tags = [p.house ? 'HOUSE' : 'HUNTER', p.demo ? 'DEMO' : '', p.wallet ? 'WALLET' : ''].filter(Boolean).map((t) => `<span class="k">${t}</span>`).join('');
   const views = v ? `<span class="label">VIEWS</span><b>${compact(v.view_count || 0)} PROFILE · ${compact(v.entry_view_count || 0)} ENTRY · ${compact(v.agent_read_count || 0)} AGENT</b>` : '';
 
@@ -79,4 +81,21 @@ export async function renderProfile(root, handle) {
       <div class="blk"><h3>PAYOUTS · ${(p.payouts || []).length}</h3>${payoutsList(p.payouts)}</div>
       <p class="meta-line">PUBLIC PROFILE FROM THE MAKE.FUN API · AVATARS SERVED BY MAKE.FUN · READ ONLY</p>
     </div></div>`;
+
+  // Fallback chain: picture.png → avatar.url → initials. No onerror attribute.
+  const img = root.querySelector('.avatar');
+  if (img) {
+    const swap = () => {
+      const face = img.dataset.face;
+      if (face) { img.removeAttribute('data-face'); img.src = face; return; }
+      img.removeEventListener('error', swap);
+      const badge = document.createElement('div');
+      badge.className = 'mono-badge';
+      badge.setAttribute('aria-hidden', 'true');
+      badge.textContent = img.dataset.initials || '';
+      img.replaceWith(badge);
+    };
+    img.addEventListener('error', swap);
+    if (img.complete && img.naturalWidth === 0) swap();
+  }
 }

@@ -89,12 +89,14 @@ export function keyed(parent, items, keyOf, make, update) {
   parent.replaceChildren(frag);
 }
 
-const TABS = new Set(['overview', 'rewards', 'standings', 'feed', 'history']);
+const TABS = new Set(['overview', 'rewards', 'standings', 'entries', 'feed', 'history']);
 let routeSeq = 0;
 
 export function parseRoute(hash = location.hash || '#/') {
   const profile = hash.match(/^#\/u\/([^/?#]+)/);
   if (profile) return { kind: 'profile', handle: decodeURIComponent(profile[1]) };
+  const entry = hash.match(/^#\/entry\/([^/?#]+)/);
+  if (entry) return { kind: 'entry', id: decodeURIComponent(entry[1]) };
   const bounty = hash.match(/^#\/bounty\/([^/?#]+)(?:\/([a-z]+))?/);
   if (bounty) {
     const tab = TABS.has(bounty[2]) ? bounty[2] : 'overview';
@@ -104,7 +106,7 @@ export function parseRoute(hash = location.hash || '#/') {
 }
 
 function setNav(r) {
-  const active = r.kind === 'profile' ? 'profile' : r.kind === 'board' ? 'board' : r.tab === 'standings' ? 'ranks' : 'bounty';
+  const active = r.kind === 'profile' ? 'profile' : r.kind === 'board' ? 'board' : r.kind === 'entry' ? 'bounty' : r.tab === 'standings' ? 'ranks' : 'bounty';
   for (const a of document.querySelectorAll('[data-nav]')) {
     if (a.dataset.nav === active) a.setAttribute('aria-current', 'page');
     else a.removeAttribute('aria-current');
@@ -114,7 +116,7 @@ function setNav(r) {
 function setCrumb(r) {
   const crumb = document.getElementById('crumb');
   if (!crumb) return;
-  crumb.textContent = r.kind === 'profile' ? `#/u/${r.handle}` : r.kind === 'bounty' ? `#/bounty/${r.slug}${r.tab === 'overview' ? '' : `/${r.tab}`}` : '#/';
+  crumb.textContent = r.kind === 'profile' ? `#/u/${r.handle}` : r.kind === 'entry' ? `#/entry/${r.id}` : r.kind === 'bounty' ? `#/bounty/${r.slug}${r.tab === 'overview' ? '' : `/${r.tab}`}` : '#/';
 }
 
 function skeleton(label) {
@@ -136,13 +138,19 @@ export async function route() {
   setCrumb(r);
   clearNotice();
   view.setAttribute('aria-busy', 'true');
-  document.title = r.kind === 'profile' ? `@${r.handle} · OBSIDIAN` : r.kind === 'bounty' ? `${r.slug} · OBSIDIAN` : 'OBSIDIAN · make.fun monitor';
+  document.title = r.kind === 'profile' ? `@${r.handle} · OBSIDIAN` : r.kind === 'entry' ? `ENTRY · OBSIDIAN` : r.kind === 'bounty' ? `${r.slug} · OBSIDIAN` : 'OBSIDIAN · make.fun monitor';
 
   try {
     if (r.kind === 'profile') {
       view.innerHTML = skeleton(`PROFILE @${r.handle}`);
       const { renderProfile } = await import('./profile.js');
       await renderProfile(view, r.handle);
+    } else if (r.kind === 'entry') {
+      view.innerHTML = `<section class="board-pane">${skeleton('BOARD')}</section><section class="detail-pane">${skeleton('ENTRY')}</section>`;
+      const [{ renderEntry }, { renderBoard }] = await Promise.all([import('./entry.js'), import('./board.js')]);
+      const slug = await renderEntry(view.querySelector('.detail-pane'), r.id);
+      document.title = `#/entry/${r.id} · OBSIDIAN`;
+      await renderBoard(view.querySelector('.board-pane'), slug || DEFAULT_SLUG);
     } else {
       const slug = r.slug || DEFAULT_SLUG;
       const tab = r.tab || 'overview';

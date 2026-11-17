@@ -58,7 +58,9 @@ function row(e, cols, counts) {
   const id = e.submission_id;
   const like = id != null ? counts.likes[id] ?? 0 : 0;
   const view = id != null ? counts.views[id] ?? 0 : 0;
-  return `<tr><td class="rk">${e.rank ?? '·'}</td><td><span class="hd" title="${esc(e.handle)}">${esc(e.handle || '—')}</span><span class="tt" title="${esc(e.title || '')}">${esc(e.title || (e.house ? 'house entry' : 'submission'))}</span></td>${cols.map((c) => `<td class="num">${esc(cell(c, e))}</td>`).join('')}<td class="soc" title="live likes ♥ and views ◉">♥ ${like} ◉ ${view}</td></tr>`;
+  const handle = esc(e.handle || '—');
+  const who = id != null ? `<a class="hd" href="#/entry/${encodeURIComponent(id)}" title="${esc(e.handle)}">${handle}</a>` : `<span class="hd" title="${handle}">${handle}</span>`;
+  return `<tr><td class="rk">${e.rank ?? '·'}</td><td>${who}<span class="tt" title="${esc(e.title || '')}">${esc(e.title || (e.house ? 'house entry' : 'submission'))}</span></td>${cols.map((c) => `<td class="num">${esc(cell(c, e))}</td>`).join('')}<td class="soc" title="live likes ♥ and views ◉">♥ ${like} ◉ ${view}</td></tr>`;
 }
 
 export async function renderLeaderboard(root, slug) {
