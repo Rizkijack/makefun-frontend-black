@@ -1,0 +1,20 @@
+/* Dynamic rank table. */
+.lb-head{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:0 0 10px}
+.lb-title{font:600 15px/1 var(--mono);letter-spacing:.03em}
+.lb-title .faint{font-weight:400;font-size:11px;margin-left:8px}
+.viewswitch{margin-left:auto;display:flex;gap:6px}
+.lb-cap{padding:8px 0;font-size:10px;letter-spacing:.1em;border-top:1px solid var(--border)}
+.lb-wrap{max-height:70vh;overflow:auto}
+table.lb-tbl{min-width:0;width:100%;table-layout:fixed}
+table.lb-tbl th{white-space:normal}
+.lb-tbl td{padding:5px 8px}
+.lb-tbl th:nth-child(2),.lb-tbl td:nth-child(2){width:300px}
+.lb-tbl th:last-child,.lb-tbl td:last-child{width:80px}
+.lb-tbl th:first-child,.lb-tbl td:first-child{width:40px}
+.lb-tbl td a{color:var(--fg)}
+.lb-tbl td a:hover{color:var(--accent)}
+.lb-tbl .sub{font:10px/1.3 var(--mono);margin-top:2px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-tbl .glyphs{white-space:nowrap;font:11px/1 var(--mono);color:var(--fg)}
+.vspacer{width:1px}
+.lb-foot{padding:10px 2px;font-size:10px;letter-spacing:.06em;word-break:break-word}
+@media (max-width:900px){.viewswitch{margin-left:0}}

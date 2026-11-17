@@ -1,0 +1,7 @@
+.feed-cap{font-size:11px;letter-spacing:.12em;padding:0 0 10px}
+.feed{list-style:none;margin:0;padding:0;border-top:1px solid var(--border)}
+.feed li{padding:9px 0;border-bottom:1px solid var(--border)}
+.feed-meta{display:flex;gap:10px;font-size:10px;letter-spacing:.06em}
+.feed-meta .h{color:var(--fg)}
+.feed-body{color:var(--muted);font:12px/1.5 var(--sans);margin:5px 0 0;word-break:break-word}
+.feed-foot{font-size:10px}

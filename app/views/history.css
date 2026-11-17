@@ -1,0 +1,7 @@
+.hist-cap{font-size:11px;letter-spacing:.12em;padding:0 0 10px}
+.hist-plot{border:1px solid var(--border);background:var(--bg);padding:6px}
+.hist-plot svg{display:block;width:100%;height:320px}
+.hist-legend{display:flex;flex-wrap:wrap;gap:14px;padding:12px 0;font-size:11px}
+.hkey{display:inline-flex;align-items:center;gap:6px;color:var(--fg)}
+.hkey i{display:inline-block;width:12px;height:2px}
+.hist-foot{font-size:10px;letter-spacing:.08em}

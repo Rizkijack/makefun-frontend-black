@@ -1,0 +1,25 @@
+/* Shared view primitives. Loaded on demand by router.js after the first paint. */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border);margin-bottom:12px}
+.kpi{padding:9px 12px;border-right:1px solid var(--border)}
+.kpi:last-child{border-right:0}
+.kpi .k{display:block;font:10px/1 var(--mono);letter-spacing:.14em;color:var(--faint);margin-bottom:7px}
+.kpi .v{font:600 20px/1 var(--mono);color:var(--fg)}
+.kpi .v.live{color:var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chip{padding:4px 8px;border:1px solid var(--border);border-radius:2px;font:10px/1 var(--mono);letter-spacing:.1em;color:var(--muted)}
+.chip[aria-pressed=true]{color:var(--fg);background:var(--surface-2)}
+table.tbl{width:100%;border-collapse:collapse;font:12px/1.4 var(--mono)}
+table.tbl th{text-align:left;font:10px/1 var(--mono);letter-spacing:.12em;color:var(--faint);padding:8px 10px;border-bottom:1px solid var(--border);white-space:nowrap;background:var(--bg)}
+table.tbl td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--muted)}
+table.tbl td.t{color:var(--fg)}table.tbl tr:hover td{background:var(--surface)}
+table.tbl tr.sel td{background:var(--surface-2)}table.tbl tr.sel td.t{font-weight:700}
+table.tbl .r{text-align:right}.num{font-variant-numeric:tabular-nums}
+.tabbar{display:flex;border-bottom:1px solid var(--border);padding:0 14px;background:var(--bg)}
+.tabbar [role=tab]{position:relative;padding:12px;font:10px/1 var(--mono);letter-spacing:.13em;color:var(--faint)}
+.tabbar [role=tab]:hover{color:var(--muted)}.tabbar [role=tab][aria-selected=true]{color:var(--fg)}
+.tabbar [role=tab][aria-selected=true]::after{content:"";position:absolute;left:12px;right:12px;bottom:-1px;height:2px;background:var(--accent)}
+.panel{padding:14px;min-height:260px}
+.group{display:grid;grid-template-columns:120px minmax(0,1fr);border-top:1px solid var(--border)}
+.group dt,.group dd{margin:0;padding:7px 0;border-bottom:1px solid var(--border);font:12px/1.5 var(--mono)}
+.group dt{color:var(--faint);font-size:10px;letter-spacing:.1em;padding-right:12px}.group dd{color:var(--fg)}.group dd .tnum{letter-spacing:-.01em}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.kpi:nth-child(2){border-right:0}.kpi:nth-child(-n+2){border-bottom:1px solid var(--border)}}

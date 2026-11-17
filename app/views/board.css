@@ -1,0 +1,13 @@
+/* Board-only rules. Loaded on demand by board.js. */
+.view .board-tbl th[data-sort]{cursor:pointer;user-select:none}
+.view .board-tbl th[data-sort]:hover{color:var(--fg)}
+.view .board-tbl .sub{font:10px/1.3 var(--mono);margin-top:3px}
+.view .board-tbl td a{color:var(--fg)}
+.view .board-tbl td a:hover{color:var(--accent)}
+.view .board-tbl td{padding:6px 10px}
+.view .board-tbl tr.sel td.t{font-weight:700}
+.board-foot{padding:10px 2px;font-size:10px;letter-spacing:.12em}
+.view .kpi .v.live{letter-spacing:-.02em}
+@media (max-width:900px){
+  .view .board-tbl{min-width:720px}
+}
