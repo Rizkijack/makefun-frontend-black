@@ -1,6 +1,6 @@
 // Later load: live status strip, recent entries, submission detail, breakdown, views.
 import { ago, compact, esc } from './format.js';
-import { API, TTL, cachedGet } from './main.js';
+import { API, TTL, cachedGet } from './core.js';
 import { groupedTable } from './bounty.js';
 
 const dateUTC = (iso) => {

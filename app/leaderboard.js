@@ -1,6 +1,6 @@
 // Dynamic leaderboard: columns, views and values come from the API, not from fixed labels.
 import { compact, esc } from './format.js';
-import { API, REQUEST_STATS, TTL, cachedGet, revalidate } from './main.js';
+import { API, REQUEST_STATS, TTL, cachedGet, revalidate } from './core.js';
 
 const ROW_H = 30;
 const WINDOW = 40;

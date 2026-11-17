@@ -1,6 +1,6 @@
 // Profile: public record, entries and payouts. Read-only, no external assets.
 import { ago, compact, esc, usd } from './format.js';
-import { API, TTL, cachedGet } from './main.js';
+import { API, TTL, cachedGet } from './core.js';
 
 const day = (iso) => (iso ? new Date(iso).toISOString().slice(0, 10) : '—');
 const prize = (v) => (v == null ? '—' : usd(v));

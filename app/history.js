@@ -1,6 +1,6 @@
 // Rank-over-time chart: five real lines from standings/history, drawn as inline SVG.
 import { esc } from './format.js';
-import { API, TTL, cachedGet } from './main.js';
+import { API, TTL, cachedGet } from './core.js';
 
 const W = 560;
 const PAD = { l: 24, r: 96, t: 12, b: 20 };

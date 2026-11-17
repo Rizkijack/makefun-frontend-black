@@ -1,6 +1,6 @@
 // Discussion feed: published comments only, capped, escaped, newest first.
 import { ago, esc } from './format.js';
-import { API, TTL, cachedGet } from './main.js';
+import { API, TTL, cachedGet } from './core.js';
 
 const CAP = 8;
 const MAX = 240;

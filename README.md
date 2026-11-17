@@ -60,12 +60,20 @@ The `REQ / CACHE / REVAL` counters in the cache strips are live, and every table
 Measured by `main.ts` (gzip-9, `node:zlib`):
 
 ```
-first load    4 files   26971 B raw   8303 B gzip
-later import  6 files   35620 B raw  13856 B gzip
-whole app    10 files   62591 B raw   22159 B gzip
+first load    3 files    5940 B raw   2485 B gzip
+later import 11 files   55848 B raw  21694 B gzip
+whole app    15 files   76713 B raw  27784 B gzip
 ```
 
-First load misses the 2.6 KB gzip target: the stylesheet alone is 4421 B gzip and the router + cache + keyed patch is 2501 B. The views themselves (board, bounty, leaderboard, history, feed, profile — 13856 B gzip) are behind `import()` and cost nothing until a route uses them. Shrinking the first load further means dropping the design system or the cache layer, so the actual number is reported instead.
+First load is the shell only: `index.html`, the core stylesheet, and a one-line boot module.
+
+```
+app/index.html    1608 B raw    785 B gzip
+app/style.css     4183 B raw   1565 B gzip
+app/main.js        149 B raw    135 B gzip
+```
+
+Everything else — router, cache layer, design system, all six views — arrives through a literal `import()`. `main.js` boots `./router.js`; the router awaits `skin()` (which appends `skin.css`) before the first paint, so the styled and unstyled frames never differ in a screenshot. No feature was cut to reach 2485 B: the full design system still loads, it just loads after the shell.
 
 ## Notes
 

@@ -1,6 +1,7 @@
 // Bounty detail: header, segmented tabs, grouped facts, rewards, charts, live sub-views.
 import { compact, esc, timeLeft, usd } from './format.js';
-import { API, REQUEST_STATS, TTL, cachedGet, revalidate, route } from './main.js';
+import { API, REQUEST_STATS, TTL, cachedGet, revalidate } from './core.js';
+import { route } from './router.js';
 
 export const TABS = ['overview', 'rewards', 'standings', 'entries', 'feed', 'history'];
 

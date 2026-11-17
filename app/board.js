@@ -1,6 +1,6 @@
 // Board: dense registry table, compact KPI band, filters, sort, live activity times.
 import { ago, compact, esc, timeLeft, usd } from './format.js';
-import { API, TTL, cachedGet, keyed, patch } from './main.js';
+import { API, TTL, cachedGet, keyed, patch } from './core.js';
 
 export const FILTERS = [
   { key: 'all', label: 'ALL', test: () => true },
