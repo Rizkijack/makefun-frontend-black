@@ -1,29 +1,32 @@
-// Small helpers for showing API values.
+// Value formatting for the dense tables: every number is tabular.
+export const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 
-/** Text made safe to put inside HTML. */
-export function esc(value) {
-  return String(value ?? '').replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+export const tnum = (value) => `<span class="tnum">${value}</span>`;
+
+export function usd(value) {
+  const n = Number(value ?? 0);
+  return `$${n.toLocaleString('en-US', { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 })}`;
 }
 
-/** A dollar amount ('1000.00' or 0.5) as '$1,000' or '$0.50'. */
-export function money(value) {
-  const n = Number(value);
-  return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: Number.isInteger(n) ? 0 : 2 });
+export function compact(value) {
+  const n = Number(value ?? 0);
+  if (n >= 1e6) return `${+(n / 1e6).toFixed(1)}M`;
+  if (n >= 1e3) return `${+(n / 1e3).toFixed(1)}K`;
+  return `${n}`;
 }
 
-/** A deadline as a date in UTC. */
-export function date(iso) {
-  return `${new Date(iso).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'UTC' })} UTC`;
+export function ago(iso) {
+  const s = (Date.now() - new Date(iso).getTime()) / 1000;
+  if (!Number.isFinite(s) || s < 0) return 'now';
+  if (s < 60) return `${Math.floor(s)}s`;
+  if (s < 3600) return `${Math.floor(s / 60)}m`;
+  if (s < 86400) return `${Math.floor(s / 3600)}h`;
+  return `${Math.floor(s / 86400)}d`;
 }
 
-/** The time until a deadline: '2d 4h left', '35m left', or 'ended'. */
 export function timeLeft(iso) {
   const ms = new Date(iso).getTime() - Date.now();
-  if (ms <= 0) return 'ended';
-  const days = Math.floor(ms / 86400000);
-  const hours = Math.floor((ms % 86400000) / 3600000);
-  const minutes = Math.floor((ms % 3600000) / 60000);
-  if (days > 0) return `${days}d ${hours}h left`;
-  if (hours > 0) return `${hours}h ${minutes}m left`;
-  return `${minutes}m left`;
+  if (!Number.isFinite(ms) || ms <= 0) return 'closed';
+  const m = Math.floor(ms / 60000), h = Math.floor(m / 60), d = Math.floor(h / 24);
+  return d ? `${d}d ${h % 24}h` : h ? `${h}h ${m % 60}m` : `${m}m`;
 }

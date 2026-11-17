@@ -2,13 +2,32 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>make.fun bounties</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OBSIDIAN · make.fun monitor</title>
+<meta name="description" content="Read-only make.fun monitor: live bounty registry, rewards, dynamic leaderboards, rank history, discussion and profiles.">
+<meta name="color-scheme" content="dark">
 <link rel="stylesheet" href="style.css">
 <script type="module" src="main.js"></script>
 </head>
 <body>
-<header><a href="#/">make.fun bounties</a></header>
-<main id="app"></main>
+<a class="skip" href="#view">Skip to data</a>
+<header class="topbar">
+  <a class="brand" href="#/" aria-label="make.fun monitor home">MAKE<span class="slash">/</span>FUN<em>MONITOR</em></a>
+  <nav class="nav" aria-label="Sections">
+    <a href="#/" data-nav="board">BOARD</a>
+    <a href="#/bounty/makefun-frontend-01" data-nav="bounty">BOUNTY</a>
+    <a href="#/bounty/makefun-frontend-01/standings" data-nav="ranks">RANKS</a>
+    <a href="#/u/Rizkijack" data-nav="profile">PROFILE</a>
+  </nav>
+  <a class="cta" href="#/bounty/makefun-frontend-01">OPEN BOUNTY <span aria-hidden="true">&#8599;</span></a>
+</header>
+<div id="notice" class="notice" hidden></div>
+<main id="view" aria-live="polite" aria-busy="false"></main>
+<footer class="statusbar">
+  <span id="crumb" class="crumb">#/</span>
+  <span class="cache-proof" aria-label="Cache pipeline">REQUEST <b>&#8594;</b> CACHE <b>&#8594;</b> REVALIDATE</span>
+  <span class="stats"><span>REQ <b data-stat="req">0</b></span><span>CACHE <b data-stat="cache">0</b></span><span>REVAL <b data-stat="reval">0</b></span><span class="ro">READ ONLY</span></span>
+  <time id="clock" class="clock">--:--:-- UTC</time>
+</footer>
 </body>
 </html>
