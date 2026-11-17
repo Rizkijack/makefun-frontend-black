@@ -1,31 +1,18 @@
-// A make.fun frontend: the board of open bounties and a page for each, on hash routes.
-//
-//   #/                the board
-//   #/bounty/<slug>   one bounty
-//
-// window.__shotReady is false while a page loads and true once its data is on screen, so a
-// screenshot script knows when to capture.
+// OBSIDIAN — make.fun read-only monitor. Minimal first-load entry.
+// The shell + hash router are in a lazy module; first load is only this file
+// plus index.html, style.css and format.js. __shotReady gates screenshots.
+import { esc } from './format.js';
 
-import { getBounties, getBounty } from './api.js';
-import { board, bounty } from './views.js';
-
-const app = document.getElementById('app');
-
-async function render() {
+// Only literal dynamic imports — no computed specifiers, no eval, no script injection.
+async function boot() {
   window.__shotReady = false;
-  app.innerHTML = '<p>Loading…</p>';
-  const match = location.hash.match(/^#\/bounty\/([^/]+)/);
-  if (match) {
-    const b = await getBounty(decodeURIComponent(match[1]));
-    document.title = `${b.title} | make.fun bounties`;
-    app.innerHTML = bounty(b);
-  } else {
-    document.title = 'make.fun bounties';
-    app.innerHTML = board(await getBounties());
+  try {
+    const { start } = await import('./router.js');
+    start();
+  } catch (e) {
+    const root = document.getElementById('app');
+    if (root) root.innerHTML = '<div class="err"><b>BOOT FAILED</b><p>' + esc(e?.message ?? e) + '</p></div>';
+    window.__shotReady = true;
   }
-  window.scrollTo(0, 0);
-  window.__shotReady = true;
 }
-
-window.addEventListener('hashchange', render);
-render();
+boot();
